@@ -1,0 +1,37 @@
+# Compiled source files
+*.class
+
+# Log files
+*.log
+
+# Package files
+*.jar
+*.war
+*.ear
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE specific files
+.idea/
+*.iml
+*.vscode/
+
+# Node.js dependencies
+node_modules/
+
+# Python specific files
+__pycache__/
+*.py[cod]
+
+# JavaScript specific files
+npm-debug.log
+yarn-error.log
+
+# Environment variables
+.env
+
+# Build directories
+dist/
+build/
