@@ -27,7 +27,6 @@ last_modified: ${modifiedTime}
 function addOrUpdateBanner(filePath, author, action) {
     const { createdTime, modifiedTime } = getFileTimes(filePath);
     const banner = generateBanner(author, createdTime, modifiedTime, path.basename(filePath,'.md'));
-
     const content = fs.readFileSync(filePath, 'utf-8');
     let newContent;
     if (action === 'update' && content.startsWith('---')) {
@@ -43,7 +42,7 @@ function addOrUpdateBanner(filePath, author, action) {
     console.log(`Banner ${action}操作已经成功被作用于 ${filePath}.`);
 }
 
-// 获取目录下所有Markdown文件，排除特定目录
+// 获取目录下所有Markdown文件，排除特定目录(目前只有node_modules)
 function getMarkdownFiles(dir) {
     let results = [];
     const list = fs.readdirSync(dir);
