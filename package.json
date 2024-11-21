@@ -12,6 +12,7 @@
     "yargs": "^17.7.2"
   },
   "bin": {
-    "banner": "./index.js"
+    "banner": "./index.js",
+    "rpt": "./hk报告/autoReport.js"
   }
 }
