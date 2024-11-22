@@ -2,13 +2,15 @@
 const fs = require('fs');
 const path = require('path');
 const yargs = require('yargs/yargs')
-const { hideBin } = require('yargs/helpers')
+const { hideBin } = require('yargs/helpers');
 
 // 获取文件的创建时间和最后修改时间
 function getFileTimes(filePath) {
     const stats = fs.statSync(filePath);
-    const createdTime = new Date(stats.birthtime).toISOString().replace('T', ' ').substring(0, 16);
-    const modifiedTime = new Date(stats.mtime).toISOString().replace('T', ' ').substring(0, 16);
+    // 可能时区不对，需要转换为UTC+8
+    const options = { timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+    const createdTime = new Date(stats.birthtime).toLocaleString('zh-CN', options).replace(/\//g, '-').replace(',', '');
+    const modifiedTime = new Date(stats.mtime).toLocaleString('zh-CN', options).replace(/\//g, '-').replace(',', '');
     return { createdTime, modifiedTime };
 }
 
