@@ -2,6 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 const yargs = require('yargs/yargs')
+const crypto = require('crypto'); // node 内置模块
 const { hideBin } = require('yargs/helpers');
 
 // 获取文件的创建时间和最后修改时间
@@ -24,26 +25,57 @@ last_modified: ${modifiedTime}
 ---
 `;
 }
+// 解析现有的 Banner 内容
+function parseBanner(content) {
+  const bannerEndIndex = content.indexOf('---', 3) + 3;
+  const bannerContent = content.substring(0, bannerEndIndex);
+  const bannerLines = bannerContent.split('\n').filter(line => line.trim() !== '---');
+  const banner = {};
+  bannerLines.forEach(line => {
+    const [key, value] = line.split(':').map(part => part.trim());
+    banner[key] = value;
+  });
+  return banner;
+}
+
+// 计算内容的哈希值
+function hashContent(content) {
+  return crypto.createHash('sha256').update(content, 'utf8').digest('hex');
+}
 
 // 读取文件内容并添加或更新Banner
 function addOrUpdateBanner(filePath, author, action) {
   const { createdTime, modifiedTime } = getFileTimes(filePath);
-  const banner = generateBanner(author, createdTime, modifiedTime, path.basename(filePath, '.md'));
+  const newBanner = generateBanner(author, createdTime, modifiedTime, path.basename(filePath, '.md'));
   const content = fs.readFileSync(filePath, 'utf-8');
   let newContent;
-  if (action === 'update' && content.startsWith('---')) {
-    const preBanner = content.substring(0, content.indexOf('---', 3) + 3);
-    console.log(`preBanner: ${preBanner}`);
-    console.log(`banner: ${banner}`);
-    if (banner !== preBanner) {
-      const endOfBanner = content.indexOf('---', 3) + 2;
-      newContent = banner + content.substring(endOfBanner);
+  if (content.startsWith('---')) {
+    const existingBanner = parseBanner(content);
+    const newBannerObj = parseBanner(newBanner);
+
+    // 判断 Banner 是否有变化
+    // 这里有问题，因为每次添加或者修改banner一定会发生修改，所以要排除last_modified字段
+    const isBannerChanged = Object.keys(newBannerObj).some(key => key !== 'last_modified' && newBannerObj[key] !== existingBanner[key]);
+
+    // 获取现有 Banner 的结束位置
+    const endOfBanner = content.indexOf('---', 3) + 3;
+    const existingContent = content.substring(endOfBanner).trim();
+    const newContentBody = content.substring(endOfBanner).trim();
+
+    // 计算哈希值判断正文内容是否有变化
+    const existingContentHash = hashContent(existingContent);
+    const newContentHash = hashContent(newContentBody);
+
+    const isContentChanged = existingContentHash !== newContentHash;
+
+    if (isBannerChanged || isContentChanged) {
+      newContent = newBanner + '\n' + newContentBody;
     } else {
-      console.log(`文章没有任何变化，不需要更新Banner。${filePath}`);
+      console.log(`${filePath} 没有任何变化，不需要更新Banner`);
       return;
     }
-  } else if (action === 'add' && !content.startsWith('---')) {
-    newContent = banner + content;
+  } else if (action === 'add') {
+    newContent = newBanner + content;
   } else {
     console.log(`没有任何操作作用于${filePath}.`);
     return;
