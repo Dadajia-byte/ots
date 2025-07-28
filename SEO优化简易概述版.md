@@ -26,11 +26,11 @@
 
 #### 3.1 SSR
 
-**CSR**，首次加载仅加载一个近乎为空的 HTML 框架，后续内容节点渲染依赖于 JS 脚本的动态加载，对搜索引擎爬虫（Googlebot）极不友好。
+- **CSR**，首次加载仅加载一个近乎为空的 HTML 框架，后续内容节点渲染依赖于 JS 脚本的动态加载，对搜索引擎爬虫（Googlebot）极不友好。
 
-**SSR**，在服务端执行渲染，返回浏览器时已经具备完整的 HTML 框架结构。
+- **SSR**，在服务端执行渲染，返回浏览器时已经具备完整的 HTML 框架结构。
 
-同时，上述现象还影响 **FCP** 与 **LCP** 等页面速度，此类指标也是直接影响 SEO 排名的重要因素。
+- 同时，上述现象还影响 **FCP** 与 **LCP** 等页面速度，此类指标也是直接影响 SEO 排名的重要因素。
 
 #### 3.2 语意化 HTML 标签 和 结构化数据
 
@@ -42,22 +42,22 @@
 
 二、使用 Schema.org 标记来帮助搜素引擎理解页面内容
 
-添加 **JSON-LD** 格式的结构化数据
-如：
-```html
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": "如何优化网页语义化",
-  "datePublished": "2023-10-01T08:00:00+08:00",
-  "author": {
-    "@type": "Person",
-    "name": "张三"
+- 添加 **JSON-LD** 格式的结构化数据
+- 如：
+- ```html
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "如何优化网页语义化",
+    "datePublished": "2023-10-01T08:00:00+08:00",
+    "author": {
+      "@type": "Person",
+      "name": "张三"
+    }
   }
-}
-</script>
-```
+  </script>
+  ```
 
 #### 3.3 网页间的权威与关联性加强
 
@@ -109,8 +109,6 @@
 |Baidu|URL 推送|5w/天|0点|https://ziyuan.baidu.com/linksubmit/index|
 |BING|URL推送|1w/天|UTC 0点|https://bing.com/webmasters/url-submission-api#APIs|
 |BING|indexNow|无限制|--|https://www.bing.com/indexnow/getstarted|
-
-**主动推送 sitemap**
 
 #### 3.7 死链提交
 
